@@ -14,15 +14,15 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         moveDir = new Vector3(Input.GetAxis("Horizontal"),  //x value
-                              _rb.linearVelocity.y, //y valye
+                              0, //y valye
                               Input.GetAxis("Vertical")).normalized; //z value .normalized
-        _rb.linearVelocity = moveDir * speed;
+        _rb.linearVelocity = new Vector3(moveDir.x * speed, _rb.linearVelocity.y, moveDir.z * speed);
         Jump();
     }
 
     private void Jump()
     {
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space))
         {
             _rb.AddForce(0, 10, 0);
         }
