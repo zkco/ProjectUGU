@@ -2,22 +2,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody _rb;
     private Vector3 moveDir;
+    [SerializeField]
+    private Rigidbody _rb;
+    [SerializeField]
+    private Transform movePivot;
+    [SerializeField]
+    private CameraController controller;
     public float speed = 5.0f;
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CameraController>();
     }
 
     private void Update()
     {
-        moveDir = new Vector3(Input.GetAxis("Horizontal"),  //x value
-                              0, //y valye
-                              Input.GetAxis("Vertical")).normalized; //z value .normalized
-        _rb.linearVelocity = new Vector3(moveDir.x * speed, _rb.linearVelocity.y, moveDir.z * speed);
+        moveDir = (movePivot.forward * Input.GetAxis("Vertical") +
+            movePivot.right * Input.GetAxis("Horizontal")) * speed;
+        Debug.Log(moveDir);
+        _rb.linearVelocity = new Vector3(moveDir.x, _rb.linearVelocity.y, moveDir.z);
+        movePivot.position = GameManager.Instance.player.transform.position;
         Jump();
+        PivotRotation();
     }
 
     private void Jump()
@@ -26,5 +33,10 @@ public class PlayerController : MonoBehaviour
         {
             _rb.AddForce(0, 10, 0);
         }
+    }
+    
+    private void PivotRotation()
+    {
+        movePivot.eulerAngles = new Vector3(0f, controller.GetRotation(), 0f);
     }
 }

@@ -1,4 +1,7 @@
-﻿public class GameManager : Singleton<GameManager>
+﻿using System.Diagnostics;
+using UnityEngine;
+
+public class GameManager : Singleton<GameManager>
 {
-    public Player player;
+    public GameObject player;
 }

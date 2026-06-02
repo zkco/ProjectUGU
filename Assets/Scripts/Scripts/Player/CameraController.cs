@@ -12,8 +12,9 @@ public class CameraController : MonoBehaviour
     private Vector3 playerPos;
 
     //Look
-    private float screenWidth;
-    private float screenHeight;
+    private float rotationClamp = 85f;
+    private float xRot = 0f;
+    private float yRot = 0f;
     private Vector2 lastMousePos = new Vector2(0,0);
     private Vector2 curMousePos;
     private Vector3 mouseDelta;
@@ -29,11 +30,16 @@ public class CameraController : MonoBehaviour
         cameraPivot.transform.position = GameManager.Instance.player.transform.position;
 
         curMousePos = Input.mousePosition;
-        Debug.Log(Input.mousePosition);
         mouseDelta = new Vector3(curMousePos.x - lastMousePos.x, curMousePos.y - lastMousePos.y, 0);
         lastMousePos = curMousePos;
-        cameraPivot.eulerAngles += new Vector3(-mouseDelta.y, mouseDelta.x);
+        xRot -= mouseDelta.y;
+        yRot += mouseDelta.x;
+        cameraPivot.eulerAngles = new Vector3(Mathf.Clamp(xRot, -rotationClamp, rotationClamp), yRot, 0f);
         //cameraPivot.rotation *= Quaternion.Euler(mouseDelta * mouseSensitive);
     }
-
+    
+    public float GetRotation()
+    {
+        return yRot;
+    }
 }
